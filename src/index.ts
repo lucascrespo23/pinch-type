@@ -241,7 +241,15 @@ export function createPinchType(
   }
 
   function onWheel(e: WheelEvent) {
-    scrollY += e.deltaY; scrollY = clamp(scrollY, -50, maxScroll + 50); e.preventDefault();
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      // Trackpad pinch-to-zoom
+      const delta = e.deltaY > 0 ? -1 : 1;
+      const newSize = clamp(fontSize + delta, minFont, maxFont);
+      if (newSize !== fontSize) { fontSize = newSize; layout(); onZoom?.(fontSize); }
+    } else {
+      scrollY += e.deltaY; scrollY = clamp(scrollY, -50, maxScroll + 50);
+    }
   }
 
   function handleResize() {
@@ -569,7 +577,21 @@ export function createPinchMorph(
   }
 
   function onWheel(e: WheelEvent) {
-    scrollY += e.deltaY; scrollY = clamp(scrollY, -50, maxScroll + 50); e.preventDefault();
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      // Trackpad pinch-to-zoom
+      const delta = e.deltaY > 0 ? -1 : 1;
+      const newCenter = clamp(centerSize + delta, minFont, maxFont);
+      if (newCenter !== centerSize) {
+        centerSize = newCenter;
+        edgeSize = Math.round(centerSize * initialRatio);
+        edgeSize = clamp(edgeSize, 4, centerSize);
+        layout();
+        onZoom?.(centerSize, edgeSize);
+      }
+    } else {
+      scrollY += e.deltaY; scrollY = clamp(scrollY, -50, maxScroll + 50);
+    }
   }
 
   function handleResize() {
