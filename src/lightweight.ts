@@ -73,10 +73,10 @@ function getAnchorAtY(target: HTMLElement, viewportY: number) {
 }
 
 function getScrollParent(el: HTMLElement): HTMLElement {
-  let node: HTMLElement | null = el.parentElement;
+  let node: HTMLElement | null = el;
   while (node) {
     const overflow = getComputedStyle(node).overflowY;
-    if (overflow === 'auto' || overflow === 'scroll') return node;
+    if ((overflow === 'auto' || overflow === 'scroll') && node.scrollHeight > node.clientHeight) return node;
     node = node.parentElement;
   }
   return document.documentElement;
