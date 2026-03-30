@@ -39,6 +39,48 @@ function clamp(v: number, lo: number, hi: number) {
   return v < lo ? lo : v > hi ? hi : v;
 }
 
+/**
+ * Find the DOM element closest to a viewport Y position and return
+ * anchor info so we can restore its position after a reflow.
+ */
+function getAnchorAtY(target: HTMLElement, viewportY: number) {
+  // Walk text-containing elements inside target
+  const candidates = target.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, span, div, blockquote, td, th, dt, dd, pre, code');
+  let best: Element | null = null;
+  let bestDist = Infinity;
+
+  for (const el of candidates) {
+    const rect = el.getBoundingClientRect();
+    // Skip invisible or empty elements
+    if (rect.height === 0) continue;
+    const center = rect.top + rect.height / 2;
+    const dist = Math.abs(center - viewportY);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = el;
+    }
+  }
+
+  // Fallback to target itself
+  if (!best) best = target;
+
+  const rect = best.getBoundingClientRect();
+  return {
+    element: best,
+    offsetFromTop: viewportY - rect.top, // how far into the element the anchor point is
+    viewportY,
+  };
+}
+
+function restoreAnchor(anchor: { element: Element; offsetFromTop: number; viewportY: number }) {
+  const rect = anchor.element.getBoundingClientRect();
+  const currentY = rect.top + anchor.offsetFromTop;
+  const drift = currentY - anchor.viewportY;
+  if (Math.abs(drift) > 1) {
+    window.scrollBy(0, drift);
+  }
+}
+
 // ─── Vanilla API ─────────────────────────────────────────────────────────────
 
 /**
@@ -60,11 +102,15 @@ export function pinchZoom(options: PinchZoomOptions = {}): () => void {
 
   target.style.fontSize = size + 'px';
 
-  function setSize(s: number) {
+  function setSize(s: number, anchorY?: number) {
     const clamped = clamp(Math.round(s), min, max);
     if (clamped !== size) {
+      // Capture anchor before resize
+      const anchor = getAnchorAtY(target, anchorY ?? window.innerHeight / 2);
       size = clamped;
       target.style.fontSize = size + 'px';
+      // Restore anchor after reflow
+      restoreAnchor(anchor);
       onZoom?.(size);
     }
   }
@@ -89,7 +135,8 @@ export function pinchZoom(options: PinchZoomOptions = {}): () => void {
     const delta = d - pinchStartDist;
     const steps = Math.trunc(delta / THRESHOLD);
     const newSize = pinchStartSize + steps * step;
-    setSize(newSize);
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    setSize(newSize, midY);
     e.preventDefault();
   }
 
@@ -99,7 +146,7 @@ export function pinchZoom(options: PinchZoomOptions = {}): () => void {
     accumulator += e.deltaY;
     if (Math.abs(accumulator) >= 10) {
       const direction = accumulator > 0 ? -step : step;
-      setSize(size + direction);
+      setSize(size + direction, e.clientY);
       accumulator = 0;
     }
   }
