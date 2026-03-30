@@ -1,4 +1,4 @@
-import { createPinchType, createScrollMorph, createPinchMorph, pinchZoom } from '../../src/index.ts';
+import { createPinchType, createScrollMorph, createPinchMorph, createPinchLens, pinchZoom } from '../../src/index.ts';
 
 const TEXT = `Build Places, Not Products
 

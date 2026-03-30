@@ -190,20 +190,40 @@ instance.<span class="fn">destroy</span>();  <span class="comment">// clean up</
 <script src="analytics.js"></script>
 <script>
 // Copy buttons with tooltip
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).catch(function() {
+      return fallbackCopy(text);
+    });
+  }
+  return fallbackCopy(text);
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  return Promise.resolve();
+}
+function showTooltip(btn) {
+  var tip = btn.querySelector('.copy-tooltip');
+  if (!tip) {
+    tip = document.createElement('span');
+    tip.className = 'copy-tooltip';
+    tip.textContent = 'Copied!';
+    btn.appendChild(tip);
+  }
+  tip.classList.add('show');
+  setTimeout(function() { tip.classList.remove('show'); }, 1500);
+}
 function addCopyTooltip(btn, getText) {
   btn.style.position = 'relative';
-  btn.addEventListener('click', () => {
-    navigator.clipboard.writeText(getText()).then(() => {
-      let tip = btn.querySelector('.copy-tooltip');
-      if (!tip) {
-        tip = document.createElement('span');
-        tip.className = 'copy-tooltip';
-        tip.textContent = 'Copied!';
-        btn.appendChild(tip);
-      }
-      tip.classList.add('show');
-      setTimeout(() => tip.classList.remove('show'), 1500);
-    });
+  btn.addEventListener('click', function() {
+    copyToClipboard(getText()).then(function() { showTooltip(btn); });
   });
 }
 document.querySelectorAll('.code-block').forEach(block => {
