@@ -103,7 +103,7 @@ footer a:hover{color:#000}
 <!-- Hero -->
 <div class="hero">
   <h1>pinch-<em>type</em></h1>
-  <p>Three canvas-based text effects for mobile web: pinch-to-zoom, scroll morph, or both combined. Built on <a href="https://github.com/chenglou/pretext">@chenglou/pretext</a>.</p>
+  <p>Four canvas-based text effects for mobile web: pinch-to-zoom, scroll morph, fish-eye lens, or combined. Built on <a href="https://github.com/chenglou/pretext">@chenglou/pretext</a>.</p>
   <div class="hero-links">
     <a href="https://github.com/lucascrespo23/pinch-type" class="btn-primary" onclick="if(window.goatcounter)goatcounter.count({path:'click-github',event:true})">GitHub</a>
     <a href="#demo" class="btn-ghost">See it in action ↓</a>
@@ -121,6 +121,7 @@ footer a:hover{color:#000}
     <button class="mode-tab" data-mode="morph">Scroll Morph</button>
     <button class="mode-tab" data-mode="combined">Combined</button>
     <button class="mode-tab" data-mode="lightweight">Lightweight</button>
+    <button class="mode-tab" data-mode="lens">Lens</button>
   </div>
   <p id="mode-desc">Both effects together — the fisheye scroll morph plus pinch-to-zoom text scaling.</p>
 
@@ -131,7 +132,7 @@ footer a:hover{color:#000}
 
 <!-- How it works -->
 <section>
-  <h2>Three effects</h2>
+  <h2>Four effects</h2>
   <div class="features">
     <div class="feature">
       <h3>Pinch Type</h3>
@@ -144,6 +145,10 @@ footer a:hover{color:#000}
     <div class="feature">
       <h3>Combined</h3>
       <p>Both effects together. The scroll morph fisheye plus pinch-to-zoom scaling. The full experience.</p>
+    </div>
+    <div class="feature">
+      <h3>Pinch Lens</h3>
+      <p>A fish-eye lens for text: pinch to magnify words near your fingers while far-away text stays normal. A localized magnifying-glass effect.</p>
     </div>
     <div class="feature">
       <h3>Lightweight Mode</h3>
@@ -166,7 +171,7 @@ footer a:hover{color:#000}
     <span class="cmd">npm install pinch-type @chenglou/pretext</span>
   </div>
 
-  <div class="code-block"><code><span class="kw">import</span> { <span class="fn">createPinchType</span>, <span class="fn">createScrollMorph</span>, <span class="fn">createPinchMorph</span> } <span class="kw">from</span> <span class="str">'pinch-type'</span>;
+  <div class="code-block"><code><span class="kw">import</span> { <span class="fn">createPinchType</span>, <span class="fn">createScrollMorph</span>, <span class="fn">createPinchMorph</span>, <span class="fn">createPinchLens</span> } <span class="kw">from</span> <span class="str">'pinch-type'</span>;
 
 <span class="comment">// Pinch-only: uniform text, pinch to scale</span>
 <span class="kw">const</span> pt = <span class="fn">createPinchType</span>(element);
@@ -176,6 +181,9 @@ footer a:hover{color:#000}
 
 <span class="comment">// Combined: fisheye + pinch zoom</span>
 <span class="kw">const</span> pm = <span class="fn">createPinchMorph</span>(element);
+
+<span class="comment">// Lens: fish-eye magnification near pinch point</span>
+<span class="kw">const</span> pl = <span class="fn">createPinchLens</span>(element);
 
 instance.<span class="fn">setText</span>(<span class="str">'Your article text…'</span>);
 instance.<span class="fn">destroy</span>();  <span class="comment">// clean up</span></code></div>
