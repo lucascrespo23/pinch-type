@@ -77,6 +77,10 @@ section h2{font-size:2.2rem;margin-bottom:1.5rem}
 .install-copy{position:absolute;top:50%;right:.75rem;transform:translateY(-50%);background:transparent;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:.7rem;color:#aaa;cursor:pointer;font-family:"Inter",system-ui,sans-serif;transition:all .2s;line-height:1}
 .install-copy:hover{color:#333;border-color:#999}
 
+/* Copy tooltip */
+.copy-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:.65rem;font-family:"Inter",system-ui,sans-serif;padding:3px 10px;border-radius:20px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;letter-spacing:.02em;line-height:1.6}
+.copy-tooltip.show{opacity:1}
+
 /* Install */
 .install-box{display:flex;align-items:center;gap:.75rem;background:#f5f5f5;border:1px solid #e5e5e5;border-radius:3px;padding:1rem 1.5rem;font-family:"JetBrains Mono",monospace;font-size:.9rem;margin:1rem 0}
 .install-box .dollar{color:#bbb;user-select:none}
@@ -185,31 +189,35 @@ instance.<span class="fn">destroy</span>();  <span class="comment">// clean up</
 <script src="dist/demo.js"></script>
 <script src="analytics.js"></script>
 <script>
-// Copy buttons
+// Copy buttons with tooltip
+function addCopyTooltip(btn, getText) {
+  btn.style.position = 'relative';
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(getText()).then(() => {
+      let tip = btn.querySelector('.copy-tooltip');
+      if (!tip) {
+        tip = document.createElement('span');
+        tip.className = 'copy-tooltip';
+        tip.textContent = 'Copied!';
+        btn.appendChild(tip);
+      }
+      tip.classList.add('show');
+      setTimeout(() => tip.classList.remove('show'), 1500);
+    });
+  });
+}
 document.querySelectorAll('.code-block').forEach(block => {
   const btn = document.createElement('button');
   btn.className = 'copy-btn';
   btn.textContent = 'Copy';
-  btn.addEventListener('click', () => {
-    const code = block.querySelector('code').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 1500);
-    });
-  });
+  addCopyTooltip(btn, () => block.querySelector('code').textContent);
   block.appendChild(btn);
 });
 document.querySelectorAll('.install-box').forEach(box => {
   const btn = document.createElement('button');
   btn.className = 'install-copy';
   btn.textContent = 'Copy';
-  btn.addEventListener('click', () => {
-    const cmd = box.querySelector('.cmd').textContent;
-    navigator.clipboard.writeText(cmd).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 1500);
-    });
-  });
+  addCopyTooltip(btn, () => box.querySelector('.cmd').textContent);
   box.appendChild(btn);
 });
 
