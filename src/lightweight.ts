@@ -138,6 +138,7 @@ export function pinchZoom(options: PinchZoomOptions = {}): () => void {
 
   function onTouchStart(e: TouchEvent) {
     if (e.touches.length === 2) {
+      e.preventDefault();
       pinchStartDist = dist(e);
       pinchStartSize = size;
       accumulator = 0;
@@ -166,7 +167,7 @@ export function pinchZoom(options: PinchZoomOptions = {}): () => void {
     }
   }
 
-  target.addEventListener('touchstart', onTouchStart, { passive: true });
+  target.addEventListener('touchstart', onTouchStart, { passive: false });
   target.addEventListener('touchmove', onTouchMove, { passive: false });
   target.addEventListener('wheel', onWheel, { passive: false });
 

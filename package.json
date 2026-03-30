@@ -1,6 +1,6 @@
 {
   "name": "pinch-type",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Pinch to zoom text, not the page. Canvas-based text scaling for mobile web.",
   "author": "Lucas Crespo",
   "license": "MIT",
