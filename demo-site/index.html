@@ -95,6 +95,34 @@ footer a{color:#999;text-decoration:none}
 footer a:hover{color:#000}
 .easter-egg{display:block;margin:2rem auto 0;background:none;border:none;color:#ddd;font-size:.7rem;cursor:pointer;letter-spacing:.1em;transition:color .3s;font-family:"Inter",system-ui,sans-serif}
 .easter-egg:hover{color:#999}
+
+/* Mobile responsive */
+@media(max-width:480px){
+  body{font-size:14px}
+  .hero{min-height:80vh;padding:2rem 1.2rem}
+  .hero h1{font-size:clamp(2.2rem,12vw,3.5rem)}
+  .hero p{font-size:.95rem;margin-bottom:2rem}
+  .hero-links a{padding:.55rem 1.2rem;font-size:.8rem}
+  .scroll-hint{bottom:1.5rem}
+  .demo-section{padding:3rem 1rem}
+  .demo-section h2{font-size:1.6rem}
+  .mode-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;gap:0;scrollbar-width:none}
+  .mode-tabs::-webkit-scrollbar{display:none}
+  .mode-tab{padding:.5rem .8rem;font-size:.78rem;white-space:nowrap;flex-shrink:0}
+  #demo-canvas{height:50vh;min-height:350px}
+  #demo-lightweight{height:50vh!important;min-height:350px!important;padding:1rem!important;font-size:14px!important}
+  .demo-hint{font-size:.7rem}
+  section{padding:3.5rem 1rem}
+  section h2{font-size:1.6rem;margin-bottom:1rem}
+  .features{gap:1.8rem}
+  .feature h3{font-size:1.05rem}
+  .feature p{font-size:.85rem}
+  .code-block{padding:.9rem 1rem;font-size:.75rem;line-height:1.7;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  .code-block code{white-space:pre;display:block;min-width:max-content}
+  .install-box{padding:.75rem 1rem;font-size:.78rem;gap:.5rem}
+  footer{padding:3rem 1rem 2rem;font-size:.75rem}
+  .easter-egg{font-size:.65rem;margin-top:1.5rem}
+}
 </style>
 <script data-goatcounter="https://pinchtype.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
