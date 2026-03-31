@@ -989,11 +989,9 @@ export function createPinchLens(
     const canvasH = H;
     if (totalH > canvasH && lensIntensity > 0) {
       // Binary search for a globalShrink that fits
-      let lo = 0.3, hi = 1.0;
+      let lo = 0.85, hi = 1.0;
       for (let iter = 0; iter < 8; iter++) {
         const mid = (lo + hi) / 2;
-        // Apply shrink only to tokens with scale near 1 (distant ones)
-        // Actually simpler: uniform shrink on all, but preserve relative lens effect
         const testH = reflowTokens(scales, maxW, mid);
         if (testH > canvasH) hi = mid;
         else lo = mid;
@@ -1014,9 +1012,9 @@ export function createPinchLens(
     }
 
     // Final reflow
-    totalH = reflowTokens(scales, maxW, totalH > canvasH ? 0.3 : 1);
+    totalH = reflowTokens(scales, maxW, totalH > canvasH ? 0.85 : 1);
     if (totalH > canvasH) {
-      let lo = 0.3, hi = 1.0;
+      let lo = 0.85, hi = 1.0;
       for (let iter = 0; iter < 8; iter++) {
         const mid = (lo + hi) / 2;
         if (reflowTokens(scales, maxW, mid) > canvasH) hi = mid;
@@ -1030,7 +1028,7 @@ export function createPinchLens(
 
   // Smooth animation: store previous positions and lerp
   let animTokens: { x: number; y: number; scale: number }[] = [];
-  const LERP_SPEED = 0.18;
+  const LERP_SPEED = 0.3;
 
   function updateAnimation() {
     // Ensure animTokens array matches tokens length
@@ -1113,7 +1111,7 @@ export function createPinchLens(
       if (Math.abs(scrollVelocity) < 0.1) scrollVelocity = 0;
     }
     if (!pinchActive && wheelZoomTimer === 0 && lensIntensity !== 0) {
-      lensIntensity *= 0.92;
+      lensIntensity *= 0.85;
       if (Math.abs(lensIntensity) < 0.005) lensIntensity = 0;
     }
 
